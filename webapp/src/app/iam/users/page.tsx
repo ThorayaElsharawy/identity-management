@@ -1,6 +1,6 @@
 "use client"
 
-import React, {useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Button } from '@/components/ui/button';
@@ -8,9 +8,10 @@ import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, RefreshCcw, Sea
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { TResponse, TUser } from '@/lib/types';
+import { TResponse } from '@/lib/types';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import UsersTable from '@/components/users-table';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const BASE_URL = 'http://127.0.0.1:8090/api/collections/users/records'
 
@@ -18,6 +19,7 @@ export default function Users() {
     const [data, setData] = useState<TResponse>();
     const [searchUser, setSearchUser] = useState('')
     const [debouncedValue, setDebouncedValue] = useState<NodeJS.Timeout>();
+    const [loading, setLoading] = useState(false);
 
     const searchParams = useSearchParams()
     const pathname = usePathname()
@@ -26,38 +28,43 @@ export default function Users() {
     const currentPage = +(searchParams.get('page') || '1')
     const totalPages = data?.totalPages || 1
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            const response = await fetch(`${BASE_URL}?page=${currentPage}&perPage=8`)
+
+    const fetchData = async (value: string, page: number) => {
+        setLoading(true)
+        try {
+            const response = await fetch(`${BASE_URL}?filter=(name~"${value}")&page=${page}&perPage=8`)
             const data = await response.json();
             setData(data)
+        } catch (error) {
+            console.error("Failed to fetch data:", error);
+        } finally {
+            setLoading(false)
         }
+    }
 
-        fetchUser()
-
+    useEffect(() => {
+        fetchData('', currentPage)
     }, [currentPage])
 
     useEffect(() => {
-        const timerID = setTimeout(() => {
-            const fetchUser = async () => {
-                const response = await fetch(`http://127.0.0.1:8090/api/collections/users/records?filter=(name~"${searchUser}")&perPage=8`)
-                const data = await response.json();
-                setData(data)
-            }
+        if (searchUser.length > 0) {
+            const timerID = setTimeout(() => {
 
-            fetchUser()
-        }, 1000);
+                fetchData(searchUser, 1)
+                router.push(`${pathname}?page=1`)
 
-        setDebouncedValue(timerID)
+            }, 1000);
+            setDebouncedValue(timerID)
 
-        return () => clearTimeout(debouncedValue)
+            return () => clearTimeout(debouncedValue)
+        }
     }, [searchUser])
 
     const handleChangePage = (newPage: number) => {
         router.push(`${pathname}?page=${newPage}`)
     }
 
-    console.log('render')
+    // console.log('render')
 
     return (
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
@@ -153,9 +160,13 @@ export default function Users() {
                             </div>
                         </div>
                     </CardHeader>
-                    <CardContent className="w-full p-0">
-                        {data ? <UsersTable data={data} /> : null}
-                    </CardContent>
+                    {loading ? (
+                        <h2>Loading...</h2>
+                    ) : (
+                        <CardContent className="w-full p-0">
+                            {data && <UsersTable data={data} currentPage={currentPage} />}
+                        </CardContent>
+                    )}
                 </Card>
             </div>
         </main>
