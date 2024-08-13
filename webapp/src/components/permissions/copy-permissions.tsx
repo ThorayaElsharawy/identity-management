@@ -1,3 +1,5 @@
+"use client"
+
 import {
     Card,
     CardContent,
@@ -5,17 +7,18 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Info, RefreshCcw, Search, Settings, SquareArrowOutUpRight } from "lucide-react";
 import { UserResponse } from '@/lib/types';
-import { Checkbox } from "../ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
+import { useState } from "react";
 
 export default function CopyPermissions({ users }: { users: UserResponse }) {
+    const [selectedGroupId, setSelectedGroupId] = useState('');
+
     return (
         <>
             <Card className="p-0">
@@ -72,10 +75,7 @@ export default function CopyPermissions({ users }: { users: UserResponse }) {
                         <TableHeader className="bg-muted">
                             <TableRow>
                                 <TableHead className="w-[50px] text-center">
-                                    <Checkbox
-                                        // checked={checked.every(Boolean)}
-                                        // onCheckedChange={handleAllChecked}
-                                    />
+
                                 </TableHead>
                                 <TableHead>User name</TableHead>
                                 <TableHead>Email</TableHead>
@@ -88,10 +88,15 @@ export default function CopyPermissions({ users }: { users: UserResponse }) {
                             {users?.items?.map((user) => (
                                 <TableRow key={user.id} className='h-[55px]'>
                                     <TableCell className="w-[50px] text-center">
-                                        <Checkbox
-                                            // checked={checked[index]}
-                                            // onCheckedChange={() => handleCheckboxChange(index)}
-                                        />
+                                        <RadioGroup
+                                            value={selectedGroupId}
+                                            onValueChange={() => setSelectedGroupId(user.id)}
+                                            >
+                                            <RadioGroupItem
+                                                id={user.id}
+                                                value={user.id}
+                                             />
+                                        </RadioGroup>
                                     </TableCell>
                                     <TableCell className="underline text-blue-500">{user.name}</TableCell>
                                     <TableCell>{user.email}</TableCell>

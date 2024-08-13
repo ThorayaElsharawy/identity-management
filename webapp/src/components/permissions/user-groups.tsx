@@ -1,4 +1,6 @@
-import React from 'react'
+"use client"
+
+import React, { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Button } from '../ui/button'
 import { RefreshCcw, Search } from 'lucide-react'
@@ -7,9 +9,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { GroupsResponse } from '@/lib/types'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 import Pagination from '../pagination'
-import { Checkbox } from '../ui/checkbox'
 
 export default function UserGroups({ groups }: { groups: GroupsResponse }) {
+    const [selectedGroupId, setSelectedGroupId] = useState('');
+
     return (
         <>
             <Card className="p-0">
@@ -62,7 +65,16 @@ export default function UserGroups({ groups }: { groups: GroupsResponse }) {
                             {groups?.items?.map(group => (
                                 <TableRow key={group.id}>
                                     <TableCell className="w-[50px] text-center">
-                                        <Checkbox />
+                                        <RadioGroup
+                                            value={selectedGroupId}
+                                            onValueChange={() => setSelectedGroupId(group.id)}>
+
+                                            <RadioGroupItem
+                                                id={group.id}
+                                                value={group.id}
+                                                // checked={selectedGroupId === group.id}
+                                            />
+                                        </RadioGroup>
                                     </TableCell>
                                     <TableCell className="underline text-blue-500">{group.name}</TableCell>
                                     <TableCell>{group?.users?.length}</TableCell>
