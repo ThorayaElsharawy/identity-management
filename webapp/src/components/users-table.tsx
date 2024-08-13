@@ -3,17 +3,17 @@
 import React, { useEffect, useState } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Checkbox } from './ui/checkbox';
-import { TResponse } from '@/lib/types';
+import { UserResponse } from '@/lib/types';
 
-export default function UsersTable({ data, currentPage }: { data: TResponse, currentPage?: number }) {
-    const [checked, setChecked] = useState(new Array(data?.items.length).fill(false));
+export default function UsersTable({ data, currentPage }: { data: UserResponse, currentPage?: number }) {
+    const [checked, setChecked] = useState(new Array(data?.items?.length).fill(false));
 
     // useEffect(() => {
     //     setChecked(new Array(data?.items.length).fill(false));
     // }, [currentPage]);
 
     const handleAllChecked = (isChecked: boolean) => {
-        setChecked(new Array(data?.items.length).fill(isChecked));
+        setChecked(new Array(data?.items?.length).fill(isChecked));
     };
     
     const handleCheckboxChange = (index: number) => {
@@ -40,7 +40,7 @@ export default function UsersTable({ data, currentPage }: { data: TResponse, cur
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {data?.items.map((user, index) => (
+                {data?.items?.map((user, index) => (
                     <TableRow key={user.id} className='h-[55px]'>
                         <TableCell className="w-[50px] text-center">
                         <Checkbox 
