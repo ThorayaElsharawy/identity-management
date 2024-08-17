@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Button } from '@/components/ui/button';
@@ -8,18 +8,19 @@ import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, RefreshCcw, Sea
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { TResponse } from '@/lib/types';
+import { UserResponse } from '@/lib/types';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import UsersTable from '@/components/users-table';
+import BreadcrumbUsers from './_breadcrumb/page';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const BASE_URL = 'http://127.0.0.1:8090/api/collections/users/records'
 
 export default function Users() {
-    const [data, setData] = useState<TResponse>();
+    const [data, setData] = useState<UserResponse>();
     const [searchUser, setSearchUser] = useState('')
     const [debouncedValue, setDebouncedValue] = useState<NodeJS.Timeout>();
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const searchParams = useSearchParams()
     const pathname = usePathname()
@@ -70,17 +71,7 @@ export default function Users() {
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
             <div className="flex items-center">
                 <div className="mt-2">
-                    <Breadcrumb>
-                        <BreadcrumbList>
-                            <BreadcrumbItem>
-                                <BreadcrumbLink href="/">IAM</BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>Users</BreadcrumbPage>
-                            </BreadcrumbItem>
-                        </BreadcrumbList>
-                    </Breadcrumb>
+                    <BreadcrumbUsers />
                 </div>
             </div>
             <div className="w-full">
@@ -160,13 +151,9 @@ export default function Users() {
                             </div>
                         </div>
                     </CardHeader>
-                    {loading ? (
-                        <h2>Loading...</h2>
-                    ) : (
-                        <CardContent className="w-full p-0">
-                            {data && <UsersTable data={data} currentPage={currentPage} />}
-                        </CardContent>
-                    )}
+                    <CardContent className="w-full p-0">
+                        {data && <UsersTable data={data} currentPage={currentPage} />}
+                    </CardContent>
                 </Card>
             </div>
         </main>

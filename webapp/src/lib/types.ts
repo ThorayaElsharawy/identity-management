@@ -32,6 +32,7 @@ export type PoliciesResponse = {
 export type TUser = {
     id: string;
     name: string;
+    username: string;
     email: string;
     verified: boolean;
     createdAt: Date;

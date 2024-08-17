@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Checkbox } from './ui/checkbox';
 import { UserResponse } from '@/lib/types';
+import Link from 'next/link';
 
 export default function UsersTable({ data, currentPage }: { data: UserResponse, currentPage?: number }) {
     const [checked, setChecked] = useState(new Array(data?.items?.length).fill(false));
@@ -48,7 +49,9 @@ export default function UsersTable({ data, currentPage }: { data: UserResponse, 
                                 onCheckedChange={() => handleCheckboxChange(index)}
                             />
                         </TableCell>
-                        <TableCell className="underline text-blue-500">{user.name}</TableCell>
+                        <TableCell className="underline text-blue-500">
+                            <Link href={`users/${user.username}`}>{user.username}</Link>
+                        </TableCell>
                         <TableCell>{user.email}</TableCell>
                         <TableCell>{user.verified ? (<span className='text-green-500'>Active</span>) : <span className='red-'>Not active</span>}</TableCell>
                         <TableCell>20/10/2024 10:00</TableCell>

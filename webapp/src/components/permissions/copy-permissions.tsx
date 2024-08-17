@@ -9,12 +9,12 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Info, RefreshCcw, Search, Settings, SquareArrowOutUpRight } from "lucide-react";
+import { RefreshCcw, Search, SquareArrowOutUpRight } from "lucide-react";
 import { UserResponse } from '@/lib/types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { useState } from "react";
+import Pagination from "../pagination";
 
 export default function CopyPermissions({ users }: { users: UserResponse }) {
     const [selectedGroupId, setSelectedGroupId] = useState('');
@@ -51,22 +51,7 @@ export default function CopyPermissions({ users }: { users: UserResponse }) {
                             </form>
                         </div>
                         <div className="flex items-center space-x-2 ">
-                            <Button variant='outline' className="p-2" disabled>
-                                <ChevronsLeft className="h-5 w-5 text-muted-foreground" />
-                            </Button>
-                            <Button variant='outline' className="p-2" disabled>
-                                <ChevronLeft className="h-5 w-5 text-muted-foreground" />
-                            </Button>
-                            <Button variant='outline' className="p-2">
-                                <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                            </Button>
-                            <Button variant='outline' className="p-2">
-                                <ChevronsRight className="h-5 w-5 text-muted-foreground" />
-                            </Button>
-                            <Separator orientation="vertical" className="py-5 bg-muted-foreground/30" />
-                            <Button variant='outline' className="p-2">
-                                <Settings className="h-5 w-5 text-muted-foreground" />
-                            </Button>
+                            <Pagination />
                         </div>
                     </div>
                 </CardHeader>
@@ -74,14 +59,17 @@ export default function CopyPermissions({ users }: { users: UserResponse }) {
                     <Table className="min-w-[950px] border-collapse border " >
                         <TableHeader className="bg-muted">
                             <TableRow>
-                                <TableHead className="w-[50px] text-center">
-
+                                <TableHead className="w-[50px] text-center"></TableHead>
+                                <TableHead className="cursor-pointer">
+                                    User name <SquareArrowOutUpRight className="inline-block w-4 h-4 -mt-1" />
                                 </TableHead>
-                                <TableHead>User name</TableHead>
-                                <TableHead>Email</TableHead>
-                                <TableHead >Active</TableHead>
-                                <TableHead >Created At</TableHead>
-                                <TableHead >Updated At</TableHead>
+                                <TableHead className="cursor-pointer">
+                                    Groups <SquareArrowOutUpRight className="inline-block w-4 h-4 -mt-1" />
+                                </TableHead>
+                                <TableHead className="cursor-pointer">
+                                    Attatched policies <SquareArrowOutUpRight className="inline-block w-4 h-4 -mt-1" />
+                                </TableHead>
+
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -91,18 +79,16 @@ export default function CopyPermissions({ users }: { users: UserResponse }) {
                                         <RadioGroup
                                             value={selectedGroupId}
                                             onValueChange={() => setSelectedGroupId(user.id)}
-                                            >
+                                        >
                                             <RadioGroupItem
                                                 id={user.id}
                                                 value={user.id}
-                                             />
+                                            />
                                         </RadioGroup>
                                     </TableCell>
                                     <TableCell className="underline text-blue-500">{user.name}</TableCell>
-                                    <TableCell>{user.email}</TableCell>
-                                    <TableCell>{user.verified ? (<span className='text-green-500'>Active</span>) : <span className='red-'>Not active</span>}</TableCell>
-                                    <TableCell>20/10/2024 10:00</TableCell>
-                                    <TableCell>20/10/2024 10:00</TableCell>
+                                    <TableCell>-</TableCell>
+                                    <TableCell>-</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
