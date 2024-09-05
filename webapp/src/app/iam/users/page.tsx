@@ -1,8 +1,7 @@
 "use client"
 
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, RefreshCcw, Search, Settings } from 'lucide-react';
 import Link from 'next/link';
@@ -12,7 +11,7 @@ import { UserResponse } from '@/lib/types';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import UsersTable from '@/components/users-table';
 import BreadcrumbUsers from './_breadcrumb/page';
-import { Skeleton } from '@/components/ui/skeleton';
+import PaginationControls from '@/components/pagination/pagination-controls';
 
 const BASE_URL = 'http://127.0.0.1:8090/api/collections/users/records'
 
@@ -37,7 +36,8 @@ export default function Users() {
             const data = await response.json();
             setData(data)
         } catch (error) {
-            console.error("Failed to fetch data:", error);
+            console.log("Failed to fetch data:", error);
+            throw new Error("Failed to fetch data")
         } finally {
             setLoading(false)
         }
@@ -64,8 +64,6 @@ export default function Users() {
     const handleChangePage = (newPage: number) => {
         router.push(`${pathname}?page=${newPage}`)
     }
-
-    // console.log('render')
 
     return (
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
@@ -115,34 +113,10 @@ export default function Users() {
                                 </form>
                             </div>
                             <div className="flex items-center space-x-2 ">
-                                <span className="sr-only">Go to first page</span>
-                                <Button variant='outline' className="p-2"
-                                    disabled={currentPage <= 1}
-                                    onClick={() => handleChangePage(1)}>
-                                    <ChevronsLeft className="h-5 w-5 text-muted-foreground" />
-                                </Button>
-                                <Button
-                                    variant='outline'
-                                    disabled={currentPage <= 1}
-                                    className="p-2"
-                                    onClick={() => handleChangePage(currentPage - 1)}>
-                                    <ChevronLeft className="h-5 w-5 text-muted-foreground" />
-                                </Button>
-
-                                <Button
-                                    onClick={() => handleChangePage(currentPage + 1)}
-                                    disabled={currentPage >= totalPages}
-                                    variant='outline'
-                                    className="p-2">
-                                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                                </Button>
-
-                                <span className="sr-only">Go to last page</span>
-                                <Button variant='outline' className="p-2"
-                                    disabled={currentPage >= totalPages}
-                                    onClick={() => handleChangePage(totalPages)}>
-                                    <ChevronsRight className="h-5 w-5 text-muted-foreground" />
-                                </Button>
+                                <PaginationControls
+                                    currentPage={currentPage}
+                                    handleChangePage={handleChangePage}
+                                    totalPages={totalPages} />
 
                                 <Separator orientation="vertical" className="py-5 bg-muted-foreground/30" />
                                 <Button variant='outline' className="p-2">

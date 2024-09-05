@@ -8,7 +8,7 @@ import { Input } from '../ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 import { GroupsResponse } from '@/lib/types'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
-import Pagination from '../pagination'
+import PaginationControls from '../pagination/pagination-controls'
 
 export default function UserGroups({ groups }: { groups: GroupsResponse }) {
     const [selectedGroupId, setSelectedGroupId] = useState('');
@@ -45,7 +45,7 @@ export default function UserGroups({ groups }: { groups: GroupsResponse }) {
                             </form>
                         </div>
                         <div className="flex items-center space-x-2 ">
-                            <Pagination />
+                            {/* <PaginationControls  /> */}
                         </div>
                     </div>
                 </CardHeader>

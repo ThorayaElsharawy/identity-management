@@ -9,7 +9,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { Checkbox } from '../ui/checkbox';
-import Pagination from '../pagination';
 
 export default function AttachPolicies({ policies }: { policies: PoliciesResponse }) {
     return (
@@ -53,7 +52,7 @@ export default function AttachPolicies({ policies }: { policies: PoliciesRespons
                             </Select>
                         </div>
                         <div className="flex items-center space-x-2 ">
-                            <Pagination />
+                            {/* <Pagination /> */}
                         </div>
                     </div>
                 </CardHeader>

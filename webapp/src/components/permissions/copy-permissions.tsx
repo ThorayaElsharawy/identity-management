@@ -14,7 +14,6 @@ import { RefreshCcw, Search, SquareArrowOutUpRight } from "lucide-react";
 import { UserResponse } from '@/lib/types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { useState } from "react";
-import Pagination from "../pagination";
 
 export default function CopyPermissions({ users }: { users: UserResponse }) {
     const [selectedGroupId, setSelectedGroupId] = useState('');
@@ -51,7 +50,7 @@ export default function CopyPermissions({ users }: { users: UserResponse }) {
                             </form>
                         </div>
                         <div className="flex items-center space-x-2 ">
-                            <Pagination />
+                            {/* <Pagination /> */}
                         </div>
                     </div>
                 </CardHeader>
